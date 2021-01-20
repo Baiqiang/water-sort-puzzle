@@ -15,6 +15,9 @@ export default {
 body {
   @apply bg-black text-white;
 }
+* {
+  -webkit-tap-highlight-color: transparent;
+}
 .button {
   @apply rounded-lg bg-yellow-500 text-black font-medium text-center px-4 py-2 tracking-wider;
 
