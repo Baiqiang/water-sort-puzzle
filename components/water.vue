@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full" :class="`bg-${water.color}`">
+  <div class="w-full" :style="{ backgroundColor: water.color }">
     <div v-for="n in water.height" :key="n" class="square" />
   </div>
 </template>

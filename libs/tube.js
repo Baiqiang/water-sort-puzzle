@@ -28,8 +28,9 @@ export default class Tube {
         return thisTop.height
       } else {
         thisTop.height = remained
-        thatTop.height += tube.height - tube.filledHeight
-        return tube.height - tube.filledHeight
+        const pouredHeight = tube.height - tube.filledHeight
+        thatTop.height += pouredHeight
+        return pouredHeight
       }
     }
   }

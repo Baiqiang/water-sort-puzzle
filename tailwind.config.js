@@ -14,5 +14,8 @@ module.exports = {
       'plugins/**/*.js',
       'nuxt.config.js',
     ],
+    options: {
+      safelist: [/^bg-\w+-[369]00/],
+    },
   },
 }

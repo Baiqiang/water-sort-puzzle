@@ -33,11 +33,11 @@
 <script>
 import { defineComponent, onMounted, ref } from '@nuxtjs/composition-api'
 import BigNumber from 'bignumber.js'
+import COLORS from '~/libs/colors'
 import {
   appendEmptyTubes,
   BIG_PRIME,
   generateTubes,
-  generateWaters,
   randomWater,
 } from '~/libs/puzzle'
 
@@ -49,15 +49,16 @@ export default defineComponent({
     const tubes = ref([])
 
     const generate = () => {
-      tubes.value = generateTubes(tubeCount.value, tubeHeight.value)
-      const waters = generateWaters(tubes.value)
+      tubes.value = generateTubes(
+        Math.min(tubeCount.value, COLORS.length),
+        Math.min(tubeHeight.value, 10)
+      )
       const randomNumber = BigNumber(tubeCount.value)
         .times(tubeHeight.value)
         .times(Math.random())
         .times(BIG_PRIME)
         .dp(0)
-      console.log(randomNumber.toFixed())
-      randomWater(tubes.value, waters, randomNumber)
+      randomWater(tubes.value, randomNumber)
       appendEmptyTubes(tubes.value, emptyTubeCount.value)
     }
 

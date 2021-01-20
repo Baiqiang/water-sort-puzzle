@@ -1,9 +1,9 @@
 <template>
   <div class="tube" v-on="$listeners">
     <div
-      class="overflow-hidden rounded-b-full border-2 border-white w-full pt-4 flex flex-col-reverse transition-all duration-200 ease-linear"
+      class="overflow-hidden rounded-b-full border-2 border-white w-full pt-2 md:pt-4 flex flex-col-reverse transition-all duration-200 ease-linear"
       :class="{
-        'transform -translate-y-10': selected,
+        'transform -translate-y-6': selected,
       }"
     >
       <Water v-for="(water, index) in tube.water" :key="index" :water="water" />
@@ -38,17 +38,13 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .tube {
-  @apply mx-1 mb-2 cursor-pointer;
+  @apply mb-2 cursor-pointer;
 
-  min-width: 28px;
+  margin-left: 5px;
+  margin-right: 5px;
 
   &:hover {
     @apply opacity-80;
-  }
-}
-@screen md {
-  .tube {
-    @apply mx-2;
   }
 }
 </style>

@@ -41,8 +41,12 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
+    meta: {
+      name: 'Water Sort Puzzle',
+    },
     manifest: {
       lang: 'en',
+      name: 'Water Sort Puzzle',
     },
   },
 

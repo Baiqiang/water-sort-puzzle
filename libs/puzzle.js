@@ -1,23 +1,25 @@
 import BigNumber from 'bignumber.js'
 import Tube, { Water } from './tube'
+import COLORS from './colors'
 
 const SQRT5 = Math.sqrt(5)
-export const BIG_PRIME = '263335179429578929874825607228167027772193'
-const COLORS_BASE = ['red', 'yellow', 'green', 'blue', 'purple', 'pink', 'gray']
-const COLORS_WEIGHT = [600, 900, 300]
+export const BIG_PRIME = BigNumber(
+  'd81dozsue86db7wmu4pyc8vcum4xtwqao20jglx2yqdo4ulazdhqkgtcigr83gvq0981zzw658j40jjr4saiwju8j3zmerbw0hx5l8ofexigizm2ce0fon1xzz3kjookkkin4ww0b489pb5vkd1vz534jgnc672zssvwmk8fekrsm9t7t08dkoo1xg2ul0xp7',
+  36
+)
 
 export function generate(level) {
   const tubeCount = getTubeCount(level)
   const tubeHeight = getTubeHeight(level)
   const emptyTubeCount = getEmptyTubeCount(tubeHeight)
   const tubes = generateTubes(tubeCount, tubeHeight)
-  const waters = generateWaters(tubes)
-  randomWater(tubes, waters, getRandomNumber(level))
+  randomWater(tubes, getRandomNumber(level))
   appendEmptyTubes(tubes, emptyTubeCount)
   return tubes
 }
 
-export function randomWater(tubes, waters, randomNumber) {
+export function randomWater(tubes, randomNumber) {
+  const waters = generateWaters(tubes)
   let number = randomNumber
   let index = 0
   while (waters.length > 0) {
@@ -52,9 +54,8 @@ export function appendEmptyTubes(tubes, emptyTubeCount) {
 export function generateWaters(tubes) {
   const waters = []
   tubes.forEach((tube, index) => {
-    const base = index % COLORS_BASE.length
-    const weight = index % COLORS_WEIGHT.length
-    const water = new Water(`${COLORS_BASE[base]}-${COLORS_WEIGHT[weight]}`, 1)
+    const color = COLORS[index]
+    const water = new Water(color, 1)
     Array(tube.height)
       .fill(0)
       .forEach((_) => {

@@ -8,15 +8,24 @@
     <div class="text-center uppercase py-3 font-medium">
       Moves {{ steps.length }}
     </div>
-    <div class="flex-1 flex items-center justify-center flex-wrap">
-      <Tube
-        v-for="(tube, index) in tubes"
-        :key="index"
-        :tube="tube"
-        :selected="tube === selectedTube"
-        :style="{ width }"
-        @click="onTubeClick(tube)"
-      />
+    <div
+      ref="tubesContainer"
+      class="flex-1 flex items-center justify-center flex-wrap content-center"
+    >
+      <template v-for="(n, index) in tubes.length">
+        <Tube
+          :key="index"
+          :tube="tubes[index]"
+          :selected="tubes[index] === selectedTube"
+          :style="{ width }"
+          @click="onTubeClick(tubes[index])"
+        />
+        <div
+          v-if="n % tubesPerRow === 0 && n < tubes.length"
+          :key="`${index}-wrap`"
+          class="w-full h-6"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -25,11 +34,14 @@
 import {
   computed,
   defineComponent,
+  getCurrentInstance,
   onMounted,
+  onUnmounted,
   reactive,
   ref,
   watch,
 } from '@nuxtjs/composition-api'
+import debounce from 'debounce'
 import Step from '~/libs/step'
 
 export default defineComponent({
@@ -43,6 +55,7 @@ export default defineComponent({
     level: [String, Number],
   },
   setup(props) {
+    const vm = getCurrentInstance()
     const steps = reactive([])
     const selectedTube = ref(null)
     const tubes = ref([])
@@ -50,11 +63,49 @@ export default defineComponent({
       props.originalTubes.map((t) => t.clone())
     )
     const solved = computed(() => tubes.value.every((tube) => tube.solved))
+    const bestRow = ref(1)
+    const tubesPerRow = computed(() =>
+      Math.ceil(tubes.value.length / bestRow.value)
+    )
     const width = ref('5%')
 
     onMounted(() => {
+      window.addEventListener('resize', debouncedOnResize, false)
       refresh()
+      onResize()
     })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', debouncedOnResize)
+    })
+
+    const onResize = () => {
+      const container = vm.refs.tubesContainer
+      const containerRatio = container.clientWidth / container.clientHeight
+      const deltas = []
+      if (tubes.value.length === 0) {
+        return
+      }
+      for (let i = 1; i < 10; i++) {
+        const tubeRatio =
+          Math.ceil(tubes.value.length / i) / tubes.value[0].height / i
+        const delta = Math.abs(tubeRatio / containerRatio - 1)
+        deltas.push(delta)
+      }
+      const minDelta = Math.min(...deltas)
+      bestRow.value = deltas.indexOf(minDelta) + 1
+      width.value =
+        Math.floor(
+          Math.min(
+            container.clientWidth / tubesPerRow.value - 10,
+            container.clientWidth /
+              (tubes.value[0].height * 1.1 * bestRow.value)
+          ) * 100
+        ) /
+          100 +
+        'px'
+    }
+    const debouncedOnResize = debounce(onResize, 200)
 
     const onTubeClick = (tube) => {
       if (solved.value) {
@@ -95,13 +146,18 @@ export default defineComponent({
         }, 10)
       }
     })
-    watch(originalTubes, refresh)
+    watch(originalTubes, () => {
+      refresh()
+      onResize()
+    })
 
     return {
       tubes,
       selectedTube,
       steps,
       width,
+      bestRow,
+      tubesPerRow,
       // methods
       undo,
       refresh,
