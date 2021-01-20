@@ -56,7 +56,7 @@ export default defineComponent({
   },
   setup(props) {
     const vm = getCurrentInstance()
-    const steps = reactive([])
+    const steps = ref([])
     const selectedTube = ref(null)
     const tubes = ref([])
     const originalTubes = computed(() =>
@@ -121,16 +121,16 @@ export default defineComponent({
       }
       const height = selectedTube.value.pourInto(tube)
       if (height > 0) {
-        steps.push(new Step(selectedTube.value, tube, height))
+        steps.value.push(new Step(selectedTube.value, tube, height))
       }
       selectedTube.value = null
     }
 
     const undo = () => {
-      if (steps.length === 0) {
+      if (steps.value.length === 0) {
         return
       }
-      const lastStep = steps.pop()
+      const lastStep = steps.value.pop()
       lastStep.undo()
     }
 
