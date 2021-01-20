@@ -17,11 +17,11 @@ export default class Step {
     if (water.eq(this.tube1.top)) {
       this.tube1.top.height += this.height
     } else {
-      this.tube1.water.push(new Water(water.color, this.height))
+      this.tube1.waters.push(new Water(water.color, this.height))
     }
     water.height -= this.height
     if (water.height === 0) {
-      this.tube2.water.pop()
+      this.tube2.waters.pop()
     }
     this.undone = true
   }

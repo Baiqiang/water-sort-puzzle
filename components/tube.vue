@@ -6,7 +6,11 @@
         'transform -translate-y-6': selected,
       }"
     >
-      <Water v-for="(water, index) in tube.water" :key="index" :water="water" />
+      <Water
+        v-for="(water, index) in tube.waters"
+        :key="index"
+        :water="water"
+      />
       <template v-if="!tube.full">
         <Water :water="emptyWater" />
       </template>

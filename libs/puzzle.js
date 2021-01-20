@@ -54,6 +54,7 @@ export function appendEmptyTubes(tubes, emptyTubeCount) {
 export function generateWaters(tubes) {
   const waters = []
   tubes.forEach((tube, index) => {
+    tube.waters = []
     const color = COLORS[index]
     const water = new Water(color, 1)
     Array(tube.height)
@@ -99,7 +100,7 @@ function getTubeCount(level) {
     sum += a2
     n++
   }
-  return Math.min(n + 2, COLORS_BASE.length * COLORS_WEIGHT.length)
+  return Math.min(n + 2, COLORS.length)
 }
 
 function getEmptyTubeCount(tubeHeight) {

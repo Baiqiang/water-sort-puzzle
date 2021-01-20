@@ -48,22 +48,28 @@ export default defineComponent({
     const emptyTubeCount = ref(2)
     const tubes = ref([])
 
-    const generate = () => {
+    const generate = async () => {
+      const { solve } = await import('~/libs/solver')
       tubes.value = generateTubes(
-        Math.min(tubeCount.value, COLORS.length),
-        Math.min(tubeHeight.value, 10)
+        Math.max(1, Math.min(tubeCount.value, COLORS.length)),
+        Math.max(1, Math.min(tubeHeight.value, 10))
       )
-      const randomNumber = BigNumber(tubeCount.value)
-        .times(tubeHeight.value)
-        .times(Math.random())
-        .times(BIG_PRIME)
-        .dp(0)
-      randomWater(tubes.value, randomNumber)
+      while (true) {
+        const randomNumber = BigNumber(tubeCount.value)
+          .times(tubeHeight.value)
+          .times(Math.random())
+          .times(BIG_PRIME)
+          .dp(0)
+        randomWater(tubes.value, randomNumber)
+        if (solve(tubes.value, emptyTubeCount.value)) {
+          break
+        }
+      }
       appendEmptyTubes(tubes.value, emptyTubeCount.value)
     }
 
-    onMounted(() => {
-      generate()
+    onMounted(async () => {
+      await generate()
     })
 
     return {

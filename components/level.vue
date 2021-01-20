@@ -98,7 +98,7 @@ export default defineComponent({
         Math.floor(
           Math.min(
             container.clientWidth / tubesPerRow.value - 10,
-            container.clientWidth /
+            container.clientHeight /
               (tubes.value[0].height * 1.1 * bestRow.value)
           ) * 100
         ) /

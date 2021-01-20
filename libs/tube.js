@@ -1,6 +1,6 @@
 export default class Tube {
   constructor(height) {
-    this.water = []
+    this.waters = []
     this.height = height
   }
 
@@ -17,13 +17,13 @@ export default class Tube {
       return 0
     }
     if (!thatTop) {
-      this.water.pop()
-      tube.water.push(thisTop)
+      this.waters.pop()
+      tube.waters.push(thisTop)
       return thisTop.height
     } else {
       const remained = thisTop.height + tube.filledHeight - tube.height
       if (remained <= 0) {
-        this.water.pop()
+        this.waters.pop()
         thatTop.height += thisTop.height
         return thisTop.height
       } else {
@@ -36,13 +36,13 @@ export default class Tube {
   }
 
   get top() {
-    return this.water[this.water.length - 1]
+    return this.waters[this.waters.length - 1]
   }
 
   get solved() {
     return (
-      this.water.length === 0 ||
-      (this.water.length === 1 && this.top.height === this.height)
+      this.waters.length === 0 ||
+      (this.waters.length === 1 && this.top.height === this.height)
     )
   }
 
@@ -55,12 +55,12 @@ export default class Tube {
   }
 
   get filledHeight() {
-    return this.water.reduce((h, { height }) => h + height, 0)
+    return this.waters.reduce((h, { height }) => h + height, 0)
   }
 
   clone() {
     const tube = new Tube(this.height)
-    tube.water = this.water.map((water) => water.clone())
+    tube.waters = this.waters.map((water) => water.clone())
     return tube
   }
 }
@@ -83,7 +83,7 @@ export class Water {
     if (this.eq(tube.top)) {
       tube.top.height += this.height
     } else {
-      tube.water.push(this.clone())
+      tube.waters.push(this.clone())
     }
   }
 }
